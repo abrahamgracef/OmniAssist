@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OmniAssist</title>
+    <link rel="stylesheet" href="/css/chat.css">
+</head>
+
+<body>
+
+<div class="app">
+
+    <aside class="sidebar">
+
+        <div class="brand">
+            <h2>OmniAssist</h2>
+            <span>AI Productivity Assistant</span>
+        </div>
+
+        <button class="new-chat">+ New Chat</button>
+
+        <div class="history">
+            <p class="section-title">Recent</p>
+
+            <button class="history-item">
+                Project Discussion
+            </button>
+
+            <button class="history-item">
+                College Tasks
+            </button>
+        </div>
+
+    </aside>
+
+    <main class="chat">
+
+        <!-- HEADER -->
+        <header class="chat-header">
+
+            <div class="header-title">
+                <h3>OmniAssist</h3>
+                <span class="status">● Online</span>
+            </div>
+
+            <!-- GOOGLE ACCOUNT -->
+            <div class="account-area">
+
+                <!-- Shown when signed OUT -->
+                <a
+                        id="google-signin"
+                        class="google-signin"
+                        href="/oauth2/authorization/google"
+                        style="display: none;">
+                    Sign in with Google
+                </a>
+
+                <!-- Shown when signed IN -->
+                <div
+                        id="google-profile"
+                        class="google-profile"
+                        style="display: none;">
+
+                    <img
+                            id="google-avatar"
+                            class="google-avatar"
+                            src=""
+                            alt="Google profile">
+
+                    <div class="google-user-info">
+                        <span id="google-name">
+                            Google Account
+                        </span>
+
+                        <small id="google-email"></small>
+                    </div>
+
+                    <span class="profile-arrow">▾</span>
+
+                    <!-- PROFILE DROPDOWN -->
+                    <div
+                            id="profile-menu"
+                            class="profile-menu">
+
+                        <div class="profile-menu-account">
+
+                            <img
+                                    id="menu-google-avatar"
+                                    class="menu-avatar"
+                                    src=""
+                                    alt="Google profile">
+
+                            <div>
+                                <strong id="menu-google-name">
+                                    Google Account
+                                </strong>
+
+                                <span id="menu-google-email"></span>
+                            </div>
+
+                        </div>
+
+                        <div class="connection-status">
+                            <span>●</span>
+                            Google connected
+                        </div>
+
+                        <a
+                                class="sign-out"
+                                href="/logout">
+                            Sign out
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </header>
+
+        <!-- CHAT MESSAGES -->
+        <section id="messages" class="messages">
+
+            <div class="assistant-message">
+
+                <div class="avatar">
+                    O
+                </div>
+
+                <div class="message-content">
+
+                    <strong>
+                        OmniAssist
+                    </strong>
+
+                    <p>
+                        Hi! I'm OmniAssist. I can help with your emails,
+                        calendar, reminders and everyday questions.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- INPUT -->
+        <div class="input-area">
+
+            <form id="chat-form">
+
+                <textarea
+                        id="message-input"
+                        placeholder="Ask OmniAssist anything..."
+                        rows="1"></textarea>
+
+                <button type="submit">
+                    Send
+                </button>
+
+            </form>
+
+            <p class="hint">
+                OmniAssist can make mistakes. Verify important actions.
+            </p>
+
+        </div>
+
+    </main>
+
+</div>
+
+<script src="/js/chat.js"></script>
+
+</body>
+</html>

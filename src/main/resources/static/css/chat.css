@@ -1,0 +1,773 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Inter, system-ui, sans-serif;
+    background: #0d0d0d;
+    color: #eeeeee;
+}
+
+.app {
+    display: flex;
+    height: 100vh;
+}
+
+.sidebar {
+    width: 260px;
+    padding: 24px 16px;
+    background: #151515;
+    border-right: 1px solid #292929;
+}
+
+.brand h2 {
+    margin: 0;
+}
+
+.brand span {
+    font-size: 12px;
+    color: #888;
+}
+
+.new-chat {
+    width: 100%;
+    margin-top: 30px;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #333;
+    background: #202020;
+    color: white;
+    cursor: pointer;
+}
+
+.section-title {
+    margin-top: 30px;
+    font-size: 12px;
+    color: #777;
+}
+
+.history-item {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    text-align: left;
+    border: none;
+    background: transparent;
+    color: #aaa;
+    cursor: pointer;
+}
+
+.history-item:hover {
+    background: #222;
+    border-radius: 6px;
+}
+
+.chat {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.chat-header {
+    height: 70px;
+    padding: 15px 30px;
+    border-bottom: 1px solid #252525;
+}
+
+.chat-header h3 {
+    margin: 0;
+}
+
+.status {
+    font-size: 12px;
+    color: #63d471;
+}
+
+.messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 40px max(30px, calc((100% - 800px) / 2));
+}
+
+.assistant-message,
+.user-message {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.avatar {
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    background: #292929;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.message-content {
+    line-height: 1.6;
+}
+
+.message-content strong {
+    font-size: 14px;
+}
+
+.message-content p {
+    margin-top: 5px;
+}
+
+.user-message {
+    justify-content: flex-end;
+}
+
+.user-message .message-content {
+    background: #252525;
+    padding: 10px 16px;
+    border-radius: 12px;
+    max-width: 70%;
+}
+
+.input-area {
+    padding: 20px max(30px, calc((100% - 800px) / 2));
+}
+
+#chat-form {
+    display: flex;
+    gap: 10px;
+    padding: 10px;
+    background: #202020;
+    border: 1px solid #333;
+    border-radius: 14px;
+}
+
+#message-input {
+    flex: 1;
+    resize: none;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: white;
+    padding: 10px;
+    font-family: inherit;
+}
+
+#chat-form button {
+    border: none;
+    border-radius: 10px;
+    padding: 0 20px;
+    cursor: pointer;
+}
+
+.hint {
+    text-align: center;
+    font-size: 11px;
+    color: #666;
+}
+
+/* ========================================
+   GOOGLE ACCOUNT / PROFILE
+   ======================================== */
+
+.chat-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.header-title {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Right side of header */
+.account-area {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+}
+
+
+/* ========================================
+   SIGN IN BUTTON
+   ======================================== */
+
+.google-signin {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 9px 16px;
+
+    border: 1px solid #d8d8d8;
+    border-radius: 10px;
+
+    background: transparent;
+
+    color: inherit;
+    text-decoration: none;
+
+    font-size: 14px;
+    font-weight: 500;
+
+    cursor: pointer;
+
+    transition:
+            background 0.15s ease,
+            border-color 0.15s ease;
+}
+
+.google-signin:hover {
+    background: #292929;
+    border-color: #444;
+}
+
+
+/* ========================================
+   SIGNED-IN PROFILE
+   ======================================== */
+
+.google-profile {
+    position: relative;
+
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+
+    padding: 6px 10px;
+
+    border-radius: 12px;
+
+    cursor: pointer;
+
+    transition: background 0.15s ease;
+}
+
+.google-profile:hover {
+    background: rgba(128, 128, 128, 0.08);
+}
+
+.google-avatar {
+    width: 38px;
+    height: 38px;
+
+    border-radius: 50%;
+
+    object-fit: cover;
+
+    flex-shrink: 0;
+}
+
+.google-user-info {
+    display: flex;
+    flex-direction: column;
+
+    max-width: 190px;
+}
+
+.google-user-info span {
+    font-size: 14px;
+    font-weight: 600;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.google-user-info small {
+    margin-top: 2px;
+
+    font-size: 12px;
+
+    opacity: 0.6;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.profile-arrow {
+    margin-left: 2px;
+
+    font-size: 12px;
+
+    opacity: 0.6;
+}
+/* ========================================
+   PROFILE DROPDOWN
+   ======================================== */
+
+.profile-menu {
+    display: none;
+    position: absolute;
+
+    top: calc(100% + 10px);
+    right: 0;
+
+    width: 280px;
+    padding: 12px;
+
+    /* OmniAssist dark theme */
+    background: #202020;
+    color: #eeeeee;
+
+    border: 1px solid #333333;
+    border-radius: 14px;
+
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.45);
+
+    cursor: default;
+    z-index: 1000;
+}
+
+.profile-menu.open {
+    display: block;
+}
+
+
+/* ========================================
+   ACCOUNT INSIDE DROPDOWN
+   ======================================== */
+
+.profile-menu-account {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+
+    padding: 6px 5px 14px;
+}
+
+.menu-avatar {
+    width: 44px;
+    height: 44px;
+
+    border-radius: 50%;
+    object-fit: cover;
+
+    flex-shrink: 0;
+}
+
+.profile-menu-account > div {
+    min-width: 0;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.profile-menu-account strong {
+    color: #eeeeee;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.profile-menu-account span {
+    margin-top: 3px;
+
+    color: #888888;
+
+    font-size: 12px;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
+/* ========================================
+   GOOGLE CONNECTION STATUS
+   ======================================== */
+
+.connection-status {
+    padding: 11px 6px;
+
+    border-top: 1px solid #333333;
+    border-bottom: 1px solid #333333;
+
+    color: #aaaaaa;
+
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.connection-status span {
+    margin-right: 5px;
+    color: #63d471;
+}
+
+
+/* ========================================
+   SIGN OUT
+   ======================================== */
+
+.sign-out {
+    display: block;
+
+    margin-top: 8px;
+    padding: 10px 8px;
+
+    border-radius: 8px;
+
+    color: #eeeeee;
+    text-decoration: none;
+
+    font-size: 13px;
+    font-weight: 500;
+
+    transition:
+            background 0.15s ease,
+            color 0.15s ease;
+}
+
+.sign-out:hover {
+    background: #292929;
+}
+/* ========================================
+   MOBILE
+   ======================================== */
+
+@media (max-width: 700px) {
+
+    .google-user-info {
+        display: none;
+    }
+
+    .profile-arrow {
+        display: none;
+    }
+
+    .google-profile {
+        padding: 4px;
+    }
+
+    .google-avatar {
+        width: 36px;
+        height: 36px;
+    }
+
+    .profile-menu {
+        right: 0;
+        width: 250px;
+    }
+
+    .google-signin {
+        border: 1px solid #333;
+        background: #202020;
+        color: #eeeeee;
+    }
+}
+.message-content p {
+    margin-top: 5px;
+    white-space: pre-wrap;
+}
+/* ========================================
+   EMAIL DRAFT
+   ======================================== */
+
+.email-draft-wrapper {
+    margin: -10px 0 30px 49px;
+    width: min(700px, calc(100% - 49px));
+}
+
+.email-draft-card {
+    width: 100%;
+
+    background: #151515;
+    border: 1px solid #333;
+    border-radius: 14px;
+
+    overflow: hidden;
+}
+
+
+/* HEADER */
+
+.email-draft-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 14px 18px;
+
+    border-bottom: 1px solid #292929;
+}
+
+.email-draft-header strong {
+    color: #eeeeee;
+
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.draft-badge {
+    padding: 4px 9px;
+
+    background: #292929;
+    border-radius: 20px;
+
+    color: #aaa;
+
+    font-size: 11px;
+}
+
+.draft-badge.sent {
+    color: #63d471;
+}
+
+
+/* ========================================
+   FIELDS
+   ======================================== */
+
+.email-draft-field {
+    padding: 13px 18px;
+
+    border-bottom: 1px solid #252525;
+}
+
+.email-draft-label {
+    display: block;
+
+    margin-bottom: 6px;
+
+    color: #777;
+
+    font-size: 11px;
+    font-weight: 600;
+
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+
+/* TO + SUBJECT */
+
+.email-draft-input {
+    display: block;
+
+    width: 100%;
+
+    margin: 0;
+    padding: 0;
+
+    background: transparent;
+
+    border: none;
+    outline: none;
+
+    color: #eeeeee;
+
+    font-family: Inter, system-ui, sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.email-draft-input[readonly] {
+    cursor: default;
+}
+
+
+/* ========================================
+   EMAIL BODY
+   ======================================== */
+
+/*
+   More specific selector intentionally overrides
+   the global textarea styling above.
+*/
+
+textarea.email-draft-body {
+    display: block;
+
+    width: 100%;
+    min-height: 170px;
+
+    margin: 0;
+    padding: 5px 0;
+
+    flex: none;
+
+    resize: none;
+
+    background: transparent;
+
+    border: none;
+    outline: none;
+
+    color: #dddddd;
+
+    font-family: Inter, system-ui, sans-serif;
+    font-size: 14px;
+    line-height: 1.7;
+
+    white-space: pre-wrap;
+    overflow-y: auto;
+}
+
+
+/* ========================================
+   EDIT MODE
+   ======================================== */
+
+.email-draft-card.editing .email-draft-input {
+    padding: 9px 11px;
+
+    background: #202020;
+
+    border: 1px solid #3b3b3b;
+    border-radius: 8px;
+}
+
+.email-draft-card.editing textarea.email-draft-body {
+    padding: 11px;
+
+    min-height: 190px;
+
+    resize: vertical;
+
+    background: #202020;
+
+    border: 1px solid #3b3b3b;
+    border-radius: 8px;
+}
+
+.email-draft-card.editing .email-draft-input:focus,
+.email-draft-card.editing textarea.email-draft-body:focus {
+    border-color: #666;
+}
+
+
+/* ========================================
+   ACTIONS
+   ======================================== */
+
+.email-draft-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+
+    gap: 10px;
+
+    padding: 14px 18px;
+
+    background: #151515;
+}
+
+.email-draft-actions button {
+    padding: 9px 15px;
+
+    border-radius: 8px;
+
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 500;
+
+    cursor: pointer;
+
+    transition:
+            background 0.15s ease,
+            border-color 0.15s ease,
+            opacity 0.15s ease;
+}
+
+
+/* CANCEL */
+
+.draft-cancel-button {
+    background: transparent;
+
+    border: 1px solid #333;
+
+    color: #aaa;
+}
+
+.draft-cancel-button:hover:not(:disabled) {
+    background: #202020;
+
+    color: #ddd;
+}
+
+
+/* EDIT */
+
+.draft-edit-button {
+    background: #252525;
+
+    border: 1px solid #383838;
+
+    color: #eeeeee;
+}
+
+.draft-edit-button:hover:not(:disabled) {
+    background: #303030;
+}
+
+
+/* SEND */
+
+.draft-send-button {
+    background: #eeeeee;
+
+    border: 1px solid #eeeeee;
+
+    color: #111;
+}
+
+.draft-send-button:hover:not(:disabled) {
+    background: #d8d8d8;
+}
+
+
+/* DISABLED */
+
+.email-draft-actions button:disabled {
+    opacity: 0.5;
+
+    cursor: not-allowed;
+}
+
+
+/* ========================================
+   SENT
+   ======================================== */
+
+.email-sent .email-draft-card {
+    border-color: #315f37;
+}
+
+
+/* ========================================
+   MOBILE
+   ======================================== */
+
+@media (max-width: 700px) {
+
+    .email-draft-wrapper {
+        margin-left: 0;
+
+        width: 100%;
+    }
+
+    .email-draft-actions {
+        flex-wrap: wrap;
+    }
+}
+
+@media (max-width: 700px) {
+
+    .email-draft-wrapper {
+        margin-left: 0;
+    }
+
+    .email-draft-card {
+        width: 100%;
+    }
+}
