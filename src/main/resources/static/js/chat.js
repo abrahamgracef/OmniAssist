@@ -114,8 +114,6 @@ function addUserMessage(text) {
 
     scrollToBottom();
 }
-
-
 function addAssistantMessage(text) {
     const element = document.createElement("div");
     element.className = "assistant-message";
