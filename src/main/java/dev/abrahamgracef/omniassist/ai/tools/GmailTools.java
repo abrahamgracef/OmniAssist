@@ -18,17 +18,19 @@ public class GmailTools {
 
     private final GmailService gmailService;
     private final OAuth2AuthorizedClientService authorizedClientService;
-
     private final EmailDraftService emailDraftService;
+    private final dev.abrahamgracef.omniassist.google.gmail.EmailTriageService emailTriageService;
 
     public GmailTools(
             GmailService gmailService,
             OAuth2AuthorizedClientService authorizedClientService,
-            EmailDraftService emailDraftService) {
+            EmailDraftService emailDraftService,
+            dev.abrahamgracef.omniassist.google.gmail.EmailTriageService emailTriageService) {
 
         this.gmailService = gmailService;
         this.authorizedClientService = authorizedClientService;
         this.emailDraftService = emailDraftService;
+        this.emailTriageService = emailTriageService;
     }
     @Tool(description = """
         Create ONE email draft for review.
@@ -118,5 +120,50 @@ public class GmailTools {
                 getAccessToken(),
                 safeCount
         );
+    }
+
+    @Tool(description = """
+        Retrieve the user's sent Gmail messages.
+        Call this tool when the user asks to see what emails they sent or check sent history.
+        """)
+    public List<EmailSummary> getSentEmails(int count) {
+        int safeCount = Math.max(1, Math.min(count, 10));
+        return gmailService.getSentMessages(
+                getAccessToken(),
+                safeCount
+        );
+    }
+
+    @Tool(description = """
+        Triage the user's unread inbox into 3 smart buckets:
+        1) Action Needed (direct questions, approvals, deadlines)
+        2) Waiting on Others (follow-up status)
+        3) Informational (newsletters, notifications)
+        Also suggests 1-click quick replies.
+        """)
+    public String triageUnreadEmails() {
+        var result = emailTriageService.triageInbox(getAccessToken(), 10);
+        StringBuilder sb = new StringBuilder();
+        sb.append("📥 Inbox Zero Triage Report (").append(result.totalEmails()).append(" emails analyzed):\n\n");
+
+        sb.append("🔴 ACTION NEEDED (").append(result.actionNeededCount()).append("):\n");
+        if (result.actionNeeded().isEmpty()) {
+            sb.append("None! You are caught up.\n");
+        } else {
+            for (var item : result.actionNeeded()) {
+                sb.append("• \"").append(item.email().subject()).append("\" from ").append(item.email().from()).append("\n");
+            }
+        }
+        sb.append("\n");
+
+        sb.append("🟡 WAITING ON OTHERS (").append(result.waitingCount()).append("):\n");
+        for (var item : result.waitingOnOthers()) {
+            sb.append("• \"").append(item.email().subject()).append("\" from ").append(item.email().from()).append("\n");
+        }
+        sb.append("\n");
+
+        sb.append("🟢 INFORMATIONAL / FYI (").append(result.informationalCount()).append(" emails)\n");
+
+        return sb.toString();
     }
 }

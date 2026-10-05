@@ -9,7 +9,7 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     @Bean
-    SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http
                 .csrf(csrf -> csrf
@@ -28,7 +28,7 @@ public class SecurityConfig {
                         ).permitAll()
 
                         // Google functionality requires login
-                        .requestMatchers("/api/gmail/**").authenticated()
+                        .requestMatchers("/api/gmail/**", "/api/email/**", "/api/calendar/**").authenticated()
 
                         .anyRequest().permitAll()
                 )

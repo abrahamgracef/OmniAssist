@@ -25,11 +25,47 @@ public class User {
     @Column(unique = true)
     private String email;
 
+    @Column(nullable = false)
+    private String role = "ROLE_USER";
+
+    private String avatarUrl;
+
+    @Column(nullable = false)
+    private String timezone = "UTC";
+
+    @Column(nullable = false)
+    private String theme = "dark";
+
+    @Column(nullable = false)
+    private int workStartHour = 9;
+
+    @Column(nullable = false)
+    private int workEndHour = 17;
+
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
+    public String getEmail() {
+        return email;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
     @PrePersist
-    void onCreate() {
-        createdAt = LocalDateTime.now();
+    public void onCreate() {
+        if (createdAt == null) {
+            createdAt = LocalDateTime.now();
+        }
+        if (role == null) {
+            role = "ROLE_USER";
+        }
+        if (timezone == null) {
+            timezone = "UTC";
+        }
+        if (theme == null) {
+            theme = "dark";
+        }
     }
 }

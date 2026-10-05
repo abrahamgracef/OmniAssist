@@ -27,22 +27,41 @@ public class ConversationService {
 
     @Transactional
     public Conversation createConversation() {
+        return createConversation(null);
+    }
 
-        // Temporary single user for MVP.
-        // We'll replace this when authentication is added.
-        User user = userRepository.findByEmail("demo@omniassist.local")
-                .orElseGet(() -> {
-                    User newUser = new User();
-                    newUser.setDisplayName("Demo User");
-                    newUser.setEmail("demo@omniassist.local");
-                    return userRepository.save(newUser);
-                });
+    @Transactional
+    public Conversation createConversation(User user) {
+        if (user == null) {
+            user = userRepository.findByEmail("demo@omniassist.local")
+                    .orElseGet(() -> {
+                        User newUser = new User();
+                        newUser.setDisplayName("Demo User");
+                        newUser.setEmail("demo@omniassist.local");
+                        return userRepository.save(newUser);
+                    });
+        }
 
         Conversation conversation = new Conversation();
         conversation.setUser(user);
         conversation.setTitle("New Chat");
 
         return conversationRepository.save(conversation);
+    }
+
+    public List<Conversation> getUserConversations(User user) {
+        if (user == null) {
+            return List.of();
+        }
+        return conversationRepository.findByUserIdOrderByUpdatedAtDesc(user.getId());
+    }
+
+    @Transactional
+    public void updateTitle(UUID conversationId, String title) {
+        conversationRepository.findById(conversationId).ifPresent(c -> {
+            c.setTitle(title);
+            conversationRepository.save(c);
+        });
     }
 
     public Conversation getConversation(UUID id) {

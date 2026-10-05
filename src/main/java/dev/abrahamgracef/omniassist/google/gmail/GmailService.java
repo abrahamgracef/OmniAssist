@@ -1,6 +1,7 @@
 package dev.abrahamgracef.omniassist.google.gmail;
 
 import org.springframework.stereotype.Service;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.web.client.RestClient;
 
 import java.util.ArrayList;
@@ -25,27 +26,26 @@ public class GmailService {
             String accessToken,
             int maxResults) {
 
-        Map response = restClient.get()
+        Map<String, Object> response = restClient.get()
                 .uri(uriBuilder -> uriBuilder
                         .path("/users/me/messages")
                         .queryParam("maxResults", maxResults)
                         .build())
                 .header("Authorization", "Bearer " + accessToken)
                 .retrieve()
-                .body(Map.class);
+                .body(new ParameterizedTypeReference<>() {});
 
         if (response == null || response.get("messages") == null) {
             return List.of();
         }
 
-        List<Map<String, String>> messages =
-                (List<Map<String, String>>) response.get("messages");
+        List<?> messages = (List<?>) response.get("messages");
 
         List<EmailSummary> emails = new ArrayList<>();
 
-        for (Map<String, String> message : messages) {
-
-            String id = message.get("id");
+        for (Object item : messages) {
+            Map<String, Object> message = asObjectMap(item);
+            String id = requiredString(message, "id", "Gmail message");
 
             emails.add(getEmail(accessToken, id));
         }
@@ -53,11 +53,105 @@ public class GmailService {
         return emails;
     }
 
-    private EmailSummary getEmail(
+    public List<EmailSummary> getSentMessages(
+            String accessToken,
+            int maxResults) {
+
+        Map<String, Object> response = restClient.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/users/me/messages")
+                        .queryParam("q", "in:sent")
+                        .queryParam("maxResults", maxResults)
+                        .build())
+                .header("Authorization", "Bearer " + accessToken)
+                .retrieve()
+                .body(new ParameterizedTypeReference<>() {});
+
+        if (response == null || response.get("messages") == null) {
+            return List.of();
+        }
+
+        List<?> messages = (List<?>) response.get("messages");
+
+        List<EmailSummary> emails = new ArrayList<>();
+        for (Object item : messages) {
+            Map<String, Object> message = asObjectMap(item);
+            String id = requiredString(message, "id", "Gmail message");
+            emails.add(getEmail(accessToken, id));
+        }
+
+        return emails;
+    }
+
+    public boolean isValidEmail(String email) {
+        if (email == null || email.isBlank()) return false;
+        return email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$");
+    }
+
+    public String replyToEmail(
+            String accessToken,
+            String messageId,
+            String threadId,
+            String to,
+            String subject,
+            String body) {
+
+        String safeSubject = subject != null && subject.startsWith("Re:") ? subject : "Re: " + (subject != null ? subject : "");
+        String mimeMessage =
+                "To: " + to + "\r\n" +
+                "Subject: " + safeSubject + "\r\n" +
+                "In-Reply-To: <" + messageId + ">\r\n" +
+                "References: <" + messageId + ">\r\n" +
+                "Content-Type: text/plain; charset=UTF-8\r\n\r\n" +
+                body;
+
+        String encodedMessage = Base64.getUrlEncoder()
+                .withoutPadding()
+                .encodeToString(mimeMessage.getBytes(StandardCharsets.UTF_8));
+
+        Map<String, String> requestBody = threadId != null && !threadId.isBlank()
+                ? Map.of("raw", encodedMessage, "threadId", threadId)
+                : Map.of("raw", encodedMessage);
+
+        Map<String, Object> response = restClient.post()
+                .uri("/users/me/messages/send")
+                .header("Authorization", "Bearer " + accessToken)
+                .body(requestBody)
+                .retrieve()
+                .body(new ParameterizedTypeReference<>() {});
+
+        if (response == null || response.get("id") == null) {
+            throw new IllegalStateException("Gmail did not return a message ID for reply");
+        }
+
+        return response.get("id").toString();
+    }
+
+    public String forwardEmail(
+            String accessToken,
+            String originalMessageId,
+            String to,
+            String noteBody) {
+
+        EmailSummary original = getEmail(accessToken, originalMessageId);
+        String subject = original.subject() != null && original.subject().startsWith("Fwd:")
+                ? original.subject()
+                : "Fwd: " + (original.subject() != null ? original.subject() : "Forwarded Message");
+
+        String combinedBody = (noteBody != null ? noteBody : "") +
+                "\r\n\r\n---------- Forwarded message ---------\r\n" +
+                "From: " + original.from() + "\r\n" +
+                "Subject: " + original.subject() + "\r\n\r\n" +
+                original.snippet();
+
+        return sendEmail(accessToken, to, subject, combinedBody);
+    }
+
+    public EmailSummary getEmail(
             String accessToken,
             String messageId) {
 
-        Map response = restClient.get()
+        Map<String, Object> response = restClient.get()
                 .uri(uriBuilder -> uriBuilder
                         .path("/users/me/messages/{id}")
                         .queryParam("format", "metadata")
@@ -66,32 +160,27 @@ public class GmailService {
                         .build(messageId))
                 .header("Authorization", "Bearer " + accessToken)
                 .retrieve()
-                .body(Map.class);
+                .body(new ParameterizedTypeReference<>() {});
 
         if (response == null) {
             throw new IllegalStateException("Unable to read Gmail message");
         }
 
-        String snippet =
-                (String) response.getOrDefault("snippet", "");
+        String snippet = stringValue(response.get("snippet"));
 
-        Map<String, Object> payload =
-                (Map<String, Object>) response.get("payload");
+        Map<String, Object> payload = asObjectMap(response.get("payload"));
 
         String from = "";
         String subject = "";
 
         if (payload != null) {
 
-            List<Map<String, String>> headers =
-                    (List<Map<String, String>>) payload.get("headers");
-
-            if (headers != null) {
-
-                for (Map<String, String> header : headers) {
-
-                    String name = header.get("name");
-                    String value = header.get("value");
+            Object headersValue = payload.get("headers");
+            if (headersValue instanceof List<?> headers) {
+                for (Object headerValue : headers) {
+                    Map<String, Object> header = asObjectMap(headerValue);
+                    String name = stringValue(header.get("name"));
+                    String value = stringValue(header.get("value"));
 
                     if ("From".equalsIgnoreCase(name)) {
                         from = value;
@@ -133,7 +222,7 @@ public class GmailService {
         Map<String, String> requestBody =
                 Map.of("raw", encodedMessage);
 
-        Map response = restClient.post()
+        Map<String, Object> response = restClient.post()
                 .uri("/users/me/messages/send")
                 .header(
                         "Authorization",
@@ -141,7 +230,7 @@ public class GmailService {
                 )
                 .body(requestBody)
                 .retrieve()
-                .body(Map.class);
+                .body(new ParameterizedTypeReference<>() {});
 
         if (response == null || response.get("id") == null) {
             throw new IllegalStateException(
@@ -151,26 +240,28 @@ public class GmailService {
 
         return response.get("id").toString();
     }
-    private String normalizeEmailBody(String body) {
-
-        if (body == null) {
-            return "";
+    private static Map<String, Object> asObjectMap(Object value) {
+        if (!(value instanceof Map<?, ?> map)) {
+            return Map.of();
         }
+        Map<String, Object> result = new java.util.LinkedHashMap<>();
+        map.forEach((key, entryValue) -> {
+            if (key instanceof String stringKey) {
+                result.put(stringKey, entryValue);
+            }
+        });
+        return result;
+    }
 
-        // Normalize Windows/Mac line endings
-        String normalized = body
-                .replace("\r\n", "\n")
-                .replace("\r", "\n");
+    private static String requiredString(Map<String, Object> map, String key, String context) {
+        Object value = map.get(key);
+        if (value instanceof String string && !string.isBlank()) {
+            return string;
+        }
+        throw new IllegalStateException(context + " response did not include " + key);
+    }
 
-        // Remove single line breaks inside paragraphs,
-        // while preserving blank lines between paragraphs.
-        String[] paragraphs = normalized.split("\\n\\s*\\n");
-
-        return java.util.Arrays.stream(paragraphs)
-                .map(paragraph -> paragraph
-                        .replaceAll("\\s*\\n\\s*", " ")
-                        .trim())
-                .filter(paragraph -> !paragraph.isEmpty())
-                .collect(java.util.stream.Collectors.joining("\r\n\r\n"));
+    private static String stringValue(Object value) {
+        return value instanceof String string ? string : "";
     }
 }

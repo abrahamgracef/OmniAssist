@@ -11,21 +11,24 @@ import java.util.Map;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/email")
+@RequestMapping({"/api/email", "/api/gmail"})
 public class EmailDraftController {
 
     private final EmailDraftService draftService;
     private final GmailService gmailService;
     private final OAuth2AuthorizedClientService authorizedClientService;
+    private final dev.abrahamgracef.omniassist.admin.AuditService auditService;
 
     public EmailDraftController(
             EmailDraftService draftService,
             GmailService gmailService,
-            OAuth2AuthorizedClientService authorizedClientService) {
+            OAuth2AuthorizedClientService authorizedClientService,
+            dev.abrahamgracef.omniassist.admin.AuditService auditService) {
 
         this.draftService = draftService;
         this.gmailService = gmailService;
         this.authorizedClientService = authorizedClientService;
+        this.auditService = auditService;
     }
 
 
@@ -98,6 +101,8 @@ public class EmailDraftController {
                             draft.subject(),
                             draft.body()
                     );
+
+            auditService.log(authentication.getName(), "EMAIL_SENT", "To: " + draft.to() + " Subject: " + draft.subject(), "SUCCESS");
 
             return Map.of(
                     "status", "sent",
