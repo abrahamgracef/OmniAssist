@@ -20,7 +20,7 @@ class GoogleCalendarServiceTest {
     private MockRestServiceServer mockServer;
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         RestClient.Builder builder = RestClient.builder();
         mockServer = MockRestServiceServer.bindTo(builder).build();
         service = new GoogleCalendarService(builder);

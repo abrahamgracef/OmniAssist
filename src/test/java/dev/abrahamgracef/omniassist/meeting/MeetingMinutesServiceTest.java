@@ -1,6 +1,5 @@
 package dev.abrahamgracef.omniassist.meeting;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.abrahamgracef.omniassist.email.EmailDraft;
 import dev.abrahamgracef.omniassist.email.EmailDraftService;
 import dev.abrahamgracef.omniassist.task.Task;
@@ -35,12 +34,11 @@ class MeetingMinutesServiceTest {
     @Mock(answer = Answers.RETURNS_DEEP_STUBS)
     private ChatClient.Builder chatClientBuilder;
 
-    private ObjectMapper objectMapper;
     private MeetingMinutesService meetingMinutesService;
     private User testUser;
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         meetingMinutesService = new MeetingMinutesService(
                 taskService,
                 emailDraftService,

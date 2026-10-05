@@ -3,10 +3,8 @@ package dev.abrahamgracef.omniassist.google.gmail;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Answers;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.ai.chat.client.ChatClient;
 
 import java.util.List;
 
@@ -19,14 +17,11 @@ class EmailTriageServiceTest {
     @Mock
     private GmailService gmailService;
 
-    @Mock(answer = Answers.RETURNS_DEEP_STUBS)
-    private ChatClient.Builder chatClientBuilder;
-
     private EmailTriageService triageService;
 
     @BeforeEach
-    void setUp() {
-        triageService = new EmailTriageService(gmailService, chatClientBuilder);
+    public void setUp() {
+        triageService = new EmailTriageService(gmailService);
     }
 
     @Test

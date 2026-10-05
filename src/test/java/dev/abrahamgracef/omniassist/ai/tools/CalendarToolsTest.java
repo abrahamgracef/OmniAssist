@@ -42,13 +42,13 @@ class CalendarToolsTest {
     private CalendarTools tools;
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         draftService = new MeetingDraftService();
         tools = new CalendarTools(calendarService, authorizedClientService, draftService, taskService, currentUserService);
     }
 
     @AfterEach
-    void tearDown() {
+    public void tearDown() {
         SecurityContextHolder.clearContext();
     }
 

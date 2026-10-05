@@ -1,6 +1,7 @@
 package dev.abrahamgracef.omniassist.google.calendar;
 
 import org.springframework.stereotype.Service;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.web.client.RestClient;
 
 import java.time.*;
@@ -12,7 +13,6 @@ public class GoogleCalendarService {
 
     private final RestClient restClient;
     private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("h:mm a");
-    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd h:mm a");
 
     public GoogleCalendarService(RestClient.Builder builder) {
         this.restClient = builder
@@ -44,7 +44,7 @@ public class GoogleCalendarService {
             Instant timeMax,
             int maxResults) {
 
-        Map response = restClient.get()
+        Map<String, Object> response = restClient.get()
                 .uri(uriBuilder -> {
                     var builder = uriBuilder
                             .path("/calendars/primary/events")
@@ -63,17 +63,20 @@ public class GoogleCalendarService {
                 })
                 .header("Authorization", "Bearer " + accessToken)
                 .retrieve()
-                .body(Map.class);
+                .body(new ParameterizedTypeReference<>() {});
 
         if (response == null || response.get("items") == null) {
             return List.of();
         }
 
-        List<Map<String, Object>> items = (List<Map<String, Object>>) response.get("items");
+        Object itemsValue = response.get("items");
+        if (!(itemsValue instanceof List<?> items)) {
+            return List.of();
+        }
         List<CalendarEvent> events = new ArrayList<>();
 
-        for (Map<String, Object> item : items) {
-            events.add(mapToCalendarEvent(item));
+        for (Object item : items) {
+            events.add(mapToCalendarEvent(asObjectMap(item)));
         }
 
         return events;
@@ -83,11 +86,11 @@ public class GoogleCalendarService {
      * Retrieve a single event by ID.
      */
     public CalendarEvent getEvent(String accessToken, String eventId) {
-        Map response = restClient.get()
+        Map<String, Object> response = restClient.get()
                 .uri("/calendars/primary/events/{id}", eventId)
                 .header("Authorization", "Bearer " + accessToken)
                 .retrieve()
-                .body(Map.class);
+                .body(new ParameterizedTypeReference<>() {});
 
         if (response == null) {
             throw new IllegalStateException("Event not found with ID: " + eventId);
@@ -137,7 +140,7 @@ public class GoogleCalendarService {
             body.put("recurrence", request.recurrence());
         }
 
-        Map response = restClient.post()
+        Map<String, Object> response = restClient.post()
                 .uri(uriBuilder -> uriBuilder
                         .path("/calendars/primary/events")
                         .queryParam("conferenceDataVersion", 1)
@@ -145,7 +148,7 @@ public class GoogleCalendarService {
                 .header("Authorization", "Bearer " + accessToken)
                 .body(body)
                 .retrieve()
-                .body(Map.class);
+                .body(new ParameterizedTypeReference<>() {});
 
         if (response == null || response.get("id") == null) {
             throw new IllegalStateException("Google Calendar did not return an event ID");
@@ -183,12 +186,12 @@ public class GoogleCalendarService {
             body.put("attendees", attendeeMaps);
         }
 
-        Map response = restClient.patch()
+        Map<String, Object> response = restClient.patch()
                 .uri("/calendars/primary/events/{id}", eventId)
                 .header("Authorization", "Bearer " + accessToken)
                 .body(body)
                 .retrieve()
-                .body(Map.class);
+                .body(new ParameterizedTypeReference<>() {});
 
         if (response == null) {
             throw new IllegalStateException("Failed to update Google Calendar event: " + eventId);
@@ -313,7 +316,7 @@ public class GoogleCalendarService {
         }
 
         // Sort busy intervals
-        busyIntervals.sort(Comparator.comparing(Interval::start));
+        busyIntervals.sort((first, second) -> first.start().compareTo(second.start()));
 
         // Merge overlapping busy intervals
         List<Interval> mergedBusy = new ArrayList<>();
@@ -485,6 +488,19 @@ public class GoogleCalendarService {
                 htmlLink,
                 attendees
         );
+    }
+
+    private Map<String, Object> asObjectMap(Object value) {
+        if (!(value instanceof Map<?, ?> map)) {
+            return Map.of();
+        }
+        Map<String, Object> result = new LinkedHashMap<>();
+        map.forEach((key, entryValue) -> {
+            if (key instanceof String stringKey) {
+                result.put(stringKey, entryValue);
+            }
+        });
+        return result;
     }
 
     private String extractDateTime(Object dateObj) {

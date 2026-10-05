@@ -1,6 +1,5 @@
 package dev.abrahamgracef.omniassist.briefing;
 
-import dev.abrahamgracef.omniassist.google.calendar.CalendarEvent;
 import dev.abrahamgracef.omniassist.google.calendar.GoogleCalendarService;
 import dev.abrahamgracef.omniassist.notification.NotificationService;
 import dev.abrahamgracef.omniassist.task.Task;
@@ -47,7 +46,7 @@ class BriefingServiceTest {
     private User testUser;
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         briefingService = new BriefingService(
                 taskService,
                 notificationService,

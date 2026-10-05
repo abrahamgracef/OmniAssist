@@ -1,7 +1,5 @@
 package dev.abrahamgracef.omniassist.google.gmail;
 
-import org.springframework.ai.chat.client.ChatClient;
-import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -11,11 +9,9 @@ import java.util.List;
 public class EmailTriageService {
 
     private final GmailService gmailService;
-    private final ChatClient chatClient;
 
-    public EmailTriageService(GmailService gmailService, ChatClient.Builder chatClientBuilder) {
+    public EmailTriageService(GmailService gmailService) {
         this.gmailService = gmailService;
-        this.chatClient = chatClientBuilder.build();
     }
 
     public TriagedInbox triageInbox(String accessToken, int maxEmails) {

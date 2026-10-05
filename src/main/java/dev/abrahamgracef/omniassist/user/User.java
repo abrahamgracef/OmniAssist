@@ -45,8 +45,16 @@ public class User {
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
+    public String getEmail() {
+        return email;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
     @PrePersist
-    void onCreate() {
+    public void onCreate() {
         if (createdAt == null) {
             createdAt = LocalDateTime.now();
         }

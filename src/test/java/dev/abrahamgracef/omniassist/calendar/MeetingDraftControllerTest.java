@@ -16,7 +16,6 @@ import org.springframework.security.oauth2.core.OAuth2AccessToken;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -41,7 +40,7 @@ class MeetingDraftControllerTest {
     private MeetingDraftController controller;
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         draftService = new MeetingDraftService();
         controller = new MeetingDraftController(draftService, calendarService, authorizedClientService, auditService);
     }

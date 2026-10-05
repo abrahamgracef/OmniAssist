@@ -33,7 +33,7 @@ class CalendarControllerTest {
     private CalendarController controller;
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         controller = new CalendarController(calendarService, taskService, currentUserService);
 
         OAuth2AccessToken token = new OAuth2AccessToken(
