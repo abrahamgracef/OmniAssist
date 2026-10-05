@@ -28,7 +28,7 @@ public class SecurityConfig {
                         ).permitAll()
 
                         // Google functionality requires login
-                        .requestMatchers("/api/gmail/**").authenticated()
+                        .requestMatchers("/api/gmail/**", "/api/email/**", "/api/calendar/**").authenticated()
 
                         .anyRequest().permitAll()
                 )

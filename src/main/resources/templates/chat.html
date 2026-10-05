@@ -1,175 +1,790 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OmniAssist</title>
+    <title>OmniAssist - AI Productivity Hub</title>
     <link rel="stylesheet" href="/css/chat.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
-
 <body>
 
 <div class="app">
 
+    <!-- SIDEBAR NAVIGATION -->
     <aside class="sidebar">
 
+        <!-- BRAND LOGO -->
         <div class="brand">
-            <h2>OmniAssist</h2>
-            <span>AI Productivity Assistant</span>
+            <div class="brand-logo">
+                <div class="logo-mark">
+                    <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.2" fill="none">
+                        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                    </svg>
+                </div>
+                <h2>OmniAssist</h2>
+            </div>
+            <div class="workspace-pill" id="workspace-selector">
+                <span class="workspace-avatar">O</span>
+                <div class="workspace-details">
+                    <span id="current-workspace-name" class="workspace-title">Personal Workspace</span>
+                    <span class="workspace-plan">Free Plan</span>
+                </div>
+                <svg class="chevron-icon" viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+            </div>
         </div>
 
-        <button class="new-chat">+ New Chat</button>
+        <!-- MAIN NAVIGATION MENU -->
+        <nav class="nav-menu">
+            <button class="nav-item active" data-view="home">
+                <svg class="nav-svg" viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                    <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                </svg>
+                <span>Home</span>
+            </button>
+            <button class="nav-item" data-view="chat">
+                <svg class="nav-svg" viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                </svg>
+                <span>Chat Assistant</span>
+            </button>
+            <button class="nav-item" data-view="tasks">
+                <svg class="nav-svg" viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none">
+                    <polyline points="9 11 12 14 22 4"></polyline>
+                    <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+                </svg>
+                <span>Planner & Tasks</span>
+            </button>
+            <button class="nav-item" data-view="calendar">
+                <svg class="nav-svg" viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+                <span>Calendar & Schedule</span>
+            </button>
+            <button class="nav-item" data-view="inbox">
+                <svg class="nav-svg" viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none">
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                    <polyline points="22,6 12,13 2,6"></polyline>
+                </svg>
+                <span>Mailbox & Templates</span>
+            </button>
+            <button class="nav-item" data-view="knowledge">
+                <svg class="nav-svg" viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none">
+                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                </svg>
+                <span>Knowledge Base</span>
+            </button>
+        </nav>
 
+        <div class="sidebar-divider"></div>
+
+        <button class="new-chat-btn" id="new-chat-btn">
+            <svg viewBox="0 0 24 24" width="15" height="15" stroke="currentColor" stroke-width="2" fill="none">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            <span>New Conversation</span>
+        </button>
+
+        <!-- RECENT CONVERSATIONS -->
         <div class="history">
-            <p class="section-title">Recent</p>
-
-            <button class="history-item">
-                Project Discussion
-            </button>
-
-            <button class="history-item">
-                College Tasks
-            </button>
+            <span class="section-label">RECENT CONVERSATIONS</span>
+            <div id="conversation-list" class="conversation-list">
+                <!-- Dynamically populated -->
+            </div>
         </div>
 
     </aside>
 
-    <main class="chat">
+    <!-- MAIN APP CONTAINER -->
+    <div class="main-container">
 
-        <!-- HEADER -->
-        <header class="chat-header">
-
-            <div class="header-title">
-                <h3>OmniAssist</h3>
-                <span class="status">● Online</span>
+        <!-- TOP BAR / HEADER -->
+        <header class="app-header">
+            <div class="header-left">
+                <div class="search-input-wrapper">
+                    <svg class="search-svg" viewBox="0 0 24 24" width="15" height="15" stroke="currentColor" stroke-width="2" fill="none">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                    <input type="text" id="global-search-input" placeholder="Search tasks, meetings, or ask OmniAssist..." class="global-search-box">
+                    <span class="shortcut-tag">Ctrl K</span>
+                </div>
             </div>
 
-            <!-- GOOGLE ACCOUNT -->
-            <div class="account-area">
+            <div class="header-right">
 
-                <!-- Shown when signed OUT -->
-                <a
-                        id="google-signin"
-                        class="google-signin"
-                        href="/oauth2/authorization/google"
-                        style="display: none;">
-                    Sign in with Google
-                </a>
-
-                <!-- Shown when signed IN -->
-                <div
-                        id="google-profile"
-                        class="google-profile"
-                        style="display: none;">
-
-                    <img
-                            id="google-avatar"
-                            class="google-avatar"
-                            src=""
-                            alt="Google profile">
-
-                    <div class="google-user-info">
-                        <span id="google-name">
-                            Google Account
-                        </span>
-
-                        <small id="google-email"></small>
-                    </div>
-
-                    <span class="profile-arrow">▾</span>
-
-                    <!-- PROFILE DROPDOWN -->
-                    <div
-                            id="profile-menu"
-                            class="profile-menu">
-
-                        <div class="profile-menu-account">
-
-                            <img
-                                    id="menu-google-avatar"
-                                    class="menu-avatar"
-                                    src=""
-                                    alt="Google profile">
-
-                            <div>
-                                <strong id="menu-google-name">
-                                    Google Account
-                                </strong>
-
-                                <span id="menu-google-email"></span>
-                            </div>
-
-                        </div>
-
-                        <div class="connection-status">
-                            <span>●</span>
-                            Google connected
-                        </div>
-
-                        <a
-                                class="sign-out"
-                                href="/logout">
-                            Sign out
-                        </a>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </header>
-
-        <!-- CHAT MESSAGES -->
-        <section id="messages" class="messages">
-
-            <div class="assistant-message">
-
-                <div class="avatar">
-                    O
-                </div>
-
-                <div class="message-content">
-
-                    <strong>
-                        OmniAssist
-                    </strong>
-
-                    <p>
-                        Hi! I'm OmniAssist. I can help with your emails,
-                        calendar, reminders and everyday questions.
-                    </p>
-
-                </div>
-
-            </div>
-
-        </section>
-
-        <!-- INPUT -->
-        <div class="input-area">
-
-            <form id="chat-form">
-
-                <textarea
-                        id="message-input"
-                        placeholder="Ask OmniAssist anything..."
-                        rows="1"></textarea>
-
-                <button type="submit">
-                    Send
+                <!-- MORNING BRIEFING QUICK BUTTON -->
+                <button id="briefing-trigger-btn" class="header-action-btn" title="Morning Executive Briefing">
+                    <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                    <span>Briefing</span>
                 </button>
 
-            </form>
+                <!-- VOICE READOUT TOGGLE (TTS) -->
+                <button id="voice-tts-toggle-btn" class="icon-btn" title="Toggle Voice Readout">
+                    <svg id="tts-icon-svg" viewBox="0 0 24 24" width="17" height="17" stroke="currentColor" stroke-width="2" fill="none">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                        <line x1="23" y1="9" x2="17" y2="15"></line>
+                        <line x1="17" y1="9" x2="23" y2="15"></line>
+                    </svg>
+                </button>
 
-            <p class="hint">
-                OmniAssist can make mistakes. Verify important actions.
-            </p>
+                <!-- THEME TOGGLE -->
+                <button id="theme-toggle-btn" class="icon-btn" title="Toggle Theme">
+                    <svg id="theme-icon-svg" viewBox="0 0 24 24" width="17" height="17" stroke="currentColor" stroke-width="2" fill="none">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                </button>
 
+                <!-- NOTIFICATION CENTER -->
+                <div class="notification-wrapper">
+                    <button id="notification-bell-btn" class="icon-btn" title="Notifications">
+                        <svg viewBox="0 0 24 24" width="17" height="17" stroke="currentColor" stroke-width="2" fill="none">
+                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                        </svg>
+                        <span id="notification-badge" class="badge" style="display: none;">0</span>
+                    </button>
+
+                    <!-- NOTIFICATION DRAWER -->
+                    <div id="notification-drawer" class="notification-drawer" style="display: none;">
+                        <div class="drawer-header">
+                            <h4>Notifications</h4>
+                            <button id="mark-all-read-btn" class="text-btn">Mark all read</button>
+                        </div>
+                        <div id="notification-items" class="notification-items">
+                            <p class="empty-state">No new notifications</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- GOOGLE PROFILE & ACCOUNT -->
+                <div class="account-area">
+                    <a id="google-signin" class="google-signin-btn" href="/oauth2/authorization/google">
+                        Sign in with Google
+                    </a>
+
+                    <div id="google-profile" class="profile-card" style="display: none;">
+                        <img id="google-avatar" class="profile-avatar" src="" alt="Avatar">
+                        <div class="profile-text">
+                            <span id="google-name">User</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TOP THREE-DOTS SETTINGS MENU BUTTON -->
+                <div class="settings-menu-wrapper">
+                    <button id="header-settings-btn" class="icon-btn" title="Settings & Preferences">
+                        <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none">
+                            <circle cx="12" cy="12" r="1"></circle>
+                            <circle cx="12" cy="5" r="1"></circle>
+                            <circle cx="12" cy="19" r="1"></circle>
+                        </svg>
+                    </button>
+
+                    <!-- THREE-DOT DROPDOWN -->
+                    <div id="settings-dropdown" class="profile-dropdown" style="display: none;">
+                        <button class="dropdown-item" id="open-settings-modal-btn">
+                            <svg viewBox="0 0 24 24" width="15" height="15" stroke="currentColor" stroke-width="2" fill="none">
+                                <circle cx="12" cy="12" r="3"></circle>
+                                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                            </svg>
+                            <span>Settings & Preferences</span>
+                        </button>
+                        <button class="dropdown-item" id="quick-export-btn">
+                            <svg viewBox="0 0 24 24" width="15" height="15" stroke="currentColor" stroke-width="2" fill="none">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="7 10 12 15 17 10"></polyline>
+                                <line x1="12" y1="15" x2="12" y2="3"></line>
+                            </svg>
+                            <span>Export Full Backup</span>
+                        </button>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item danger-text" href="/logout">
+                            <svg viewBox="0 0 24 24" width="15" height="15" stroke="currentColor" stroke-width="2" fill="none">
+                                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                                <polyline points="16 17 21 12 16 7"></polyline>
+                                <line x1="21" y1="12" x2="9" y2="12"></line>
+                            </svg>
+                            <span>Sign out</span>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </header>
+
+        <!-- VIEW 0: HOME / EXECUTIVE HUB (VEED.IO INSPIRED) -->
+        <section id="view-home" class="view-panel active-view">
+            <div class="home-container">
+
+                <!-- HERO SECTION -->
+                <div class="home-hero">
+                    <div class="hero-left">
+                        <h1 class="hero-title">Let's get productive, <span id="home-user-name">User</span>!</h1>
+                        <p class="hero-subtitle">Your unified executive intelligence hub for calendar, tasks, and communication.</p>
+                    </div>
+                    <div class="hero-badge">
+                        <span class="status-dot-pulse"></span>
+                        <span>Gemini 3.5 Connected</span>
+                    </div>
+                </div>
+
+                <!-- QUICK ACTION CARDS ROW -->
+                <div class="quick-actions-grid">
+                    <div class="action-card" id="card-new-chat">
+                        <div class="action-icon-box accent-purple">
+                            <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none">
+                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                            </svg>
+                        </div>
+                        <div class="action-card-text">
+                            <h4>Chat Assistant</h4>
+                            <p>Ask anything or draft emails</p>
+                        </div>
+                    </div>
+
+                    <div class="action-card" id="card-morning-briefing">
+                        <div class="action-icon-box accent-orange">
+                            <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none">
+                                <circle cx="12" cy="12" r="5"></circle>
+                                <line x1="12" y1="1" x2="12" y2="3"></line>
+                                <line x1="12" y1="21" x2="12" y2="23"></line>
+                            </svg>
+                        </div>
+                        <div class="action-card-text">
+                            <h4>Morning Briefing</h4>
+                            <p>Daily priorities & audio recap</p>
+                        </div>
+                    </div>
+
+                    <div class="action-card" id="card-auto-block">
+                        <div class="action-icon-box accent-blue">
+                            <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <circle cx="12" cy="12" r="6"></circle>
+                                <circle cx="12" cy="12" r="2"></circle>
+                            </svg>
+                        </div>
+                        <div class="action-card-text">
+                            <h4>Auto-Block Focus</h4>
+                            <p>Reserve open calendar slots</p>
+                        </div>
+                    </div>
+
+                    <div class="action-card" id="card-process-notes">
+                        <div class="action-icon-box accent-green">
+                            <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <polyline points="14 2 14 8 20 8"></polyline>
+                                <line x1="16" y1="13" x2="8" y2="13"></line>
+                                <line x1="16" y1="17" x2="8" y2="17"></line>
+                            </svg>
+                        </div>
+                        <div class="action-card-text">
+                            <h4>Process Minutes</h4>
+                            <p>Extract tasks & draft email</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TWO-COLUMN DASHBOARD HUB -->
+                <div class="home-two-col">
+
+                    <!-- LEFT COLUMN: AGENDA & TASKS -->
+                    <div class="home-col-main">
+
+                        <!-- TODAY'S SCHEDULE -->
+                        <div class="dashboard-widget card">
+                            <div class="widget-header">
+                                <div class="widget-title-area">
+                                    <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none">
+                                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                        <line x1="16" y1="2" x2="16" y2="6"></line>
+                                        <line x1="8" y1="2" x2="8" y2="6"></line>
+                                        <line x1="3" y1="10" x2="21" y2="10"></line>
+                                    </svg>
+                                    <h3>Today's Agenda</h3>
+                                </div>
+                                <button class="widget-text-btn" id="home-view-calendar-btn">View Calendar &rarr;</button>
+                            </div>
+                            <div id="home-events-container" class="home-list">
+                                <p class="loading-state">Loading today's schedule...</p>
+                            </div>
+                        </div>
+
+                        <!-- PRIORITY DELIVERABLES -->
+                        <div class="dashboard-widget card">
+                            <div class="widget-header">
+                                <div class="widget-title-area">
+                                    <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none">
+                                        <polyline points="9 11 12 14 22 4"></polyline>
+                                        <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+                                    </svg>
+                                    <h3>Priority Tasks</h3>
+                                </div>
+                                <button class="widget-text-btn" id="home-view-tasks-btn">View Planner &rarr;</button>
+                            </div>
+                            <div id="home-tasks-container" class="home-list">
+                                <p class="loading-state">Loading pending tasks...</p>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- RIGHT COLUMN: INTERACTIVE ASSISTANT & TRIAGE -->
+                    <div class="home-col-side">
+
+                        <!-- INTERACTIVE ASSISTANT CARD (VEED.IO STYLE) -->
+                        <div class="assistant-dock-card card">
+                            <div class="dock-header">
+                                <div class="dock-badge">OmniAssist AI</div>
+                                <h3>How can we assist you?</h3>
+                                <p class="sub-text">Give instructions across mail, calendar, tasks, or knowledge base.</p>
+                            </div>
+
+                            <!-- QUICK PROMPT CHIPS -->
+                            <div class="dock-chips">
+                                <button class="dock-chip" data-home-query="What is on my schedule today?">Today's Schedule</button>
+                                <button class="dock-chip" data-home-query="Give me my daily executive briefing">Daily Briefing</button>
+                                <button class="dock-chip" data-home-query="Triage my unread emails and categorize action items">Triage Inbox</button>
+                                <button class="dock-chip" data-home-query="Find 30m free slots tomorrow">Find Free Slots</button>
+                            </div>
+
+                            <!-- DOCK INPUT -->
+                            <div class="dock-input-box">
+                                <input type="text" id="home-assistant-input" placeholder="Ask OmniAssist anything..." class="text-input">
+                                <button id="home-assistant-mic-btn" class="dock-icon-btn" title="Voice Input">
+                                    <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none">
+                                        <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                                        <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                                        <line x1="12" y1="19" x2="12" y2="23"></line>
+                                        <line x1="8" y1="23" x2="16" y2="23"></line>
+                                    </svg>
+                                </button>
+                                <button id="home-assistant-send-btn" class="dock-send-btn" title="Send message">
+                                    <svg viewBox="0 0 24 24" width="15" height="15" stroke="currentColor" stroke-width="2" fill="none">
+                                        <line x1="22" y1="2" x2="11" y2="13"></line>
+                                        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- RECENT UNREAD TRIAGE -->
+                        <div class="dashboard-widget card">
+                            <div class="widget-header">
+                                <div class="widget-title-area">
+                                    <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none">
+                                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                                        <polyline points="22,6 12,13 2,6"></polyline>
+                                    </svg>
+                                    <h3>Inbox Actions</h3>
+                                </div>
+                                <button class="widget-text-btn" id="home-view-inbox-btn">Open Mailbox &rarr;</button>
+                            </div>
+                            <div id="home-triage-container" class="home-list">
+                                <p class="loading-state">Analyzing unread communications...</p>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+
+        <!-- VIEW 1: CHAT ASSISTANT -->
+        <section id="view-chat" class="view-panel" style="display: none;">
+
+            <!-- EXECUTIVE BRIEFING BANNER -->
+            <div id="briefing-card" class="briefing-banner" style="display: none;">
+                <div class="briefing-header">
+                    <div class="briefing-title-area">
+                        <div class="briefing-icon">
+                            <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none">
+                                <circle cx="12" cy="12" r="5"></circle>
+                                <line x1="12" y1="1" x2="12" y2="3"></line>
+                                <line x1="12" y1="21" x2="12" y2="23"></line>
+                            </svg>
+                        </div>
+                        <div>
+                            <h4 id="briefing-title">Today's Executive Briefing</h4>
+                            <small id="briefing-date" class="sub-text">AI Daily Intelligence</small>
+                        </div>
+                    </div>
+                    <div class="briefing-actions">
+                        <button id="briefing-listen-btn" class="icon-btn-text" title="Read briefing aloud">
+                            <svg viewBox="0 0 24 24" width="13" height="13" stroke="currentColor" stroke-width="2" fill="none">
+                                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                                <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                            </svg>
+                            <span>Listen</span>
+                        </button>
+                        <button id="briefing-refresh-btn" class="icon-btn" title="Refresh briefing">
+                            <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none">
+                                <polyline points="23 4 23 10 17 10"></polyline>
+                                <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+                            </svg>
+                        </button>
+                        <button id="briefing-close-btn" class="icon-btn" title="Dismiss">
+                            <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none">
+                                <line x1="18" y1="6" x2="6" y2="18"></line>
+                                <line x1="6" y1="6" x2="18" y2="18"></line>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <div id="briefing-content" class="briefing-body">
+                    <p class="loading-state">Compiling schedule, priorities, and incoming alerts...</p>
+                </div>
+            </div>
+
+            <!-- MESSAGES CONTAINER -->
+            <div id="messages" class="messages-container">
+                <div class="assistant-message">
+                    <div class="msg-avatar">
+                        <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none">
+                            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                        </svg>
+                    </div>
+                    <div class="msg-body">
+                        <strong>OmniAssist</strong>
+                        <p>Welcome! I'm your productivity assistant. I can orchestrate your emails, manage your calendar, prioritize tasks in your daily planner, and search your internal knowledge base. How can I help you today?</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DYNAMIC SUGGESTION CHIPS -->
+            <div id="suggestion-chips" class="suggestion-chips">
+                <button class="chip" data-query="Give me my daily executive briefing">Executive Briefing</button>
+                <button class="chip" data-query="Triage my unread emails and categorize action items">Inbox Triage</button>
+                <button class="chip" data-query="Auto-block focus time for my pending tasks on calendar">Auto-Block Focus</button>
+                <button class="chip" data-query="What's on my schedule today?">Today's Schedule</button>
+                <button class="chip" data-query="Show my daily planner and pending tasks">Daily Planner</button>
+            </div>
+
+            <!-- CHAT INPUT -->
+            <div class="chat-input-wrapper">
+                <form id="chat-form" class="chat-input-box">
+                    <textarea id="message-input" placeholder="Type a message or click mic to dictate..." rows="1"></textarea>
+                    <button type="button" id="mic-btn" class="mic-btn" title="Voice Input (Speech-to-Text)">
+                        <svg viewBox="0 0 24 24" width="17" height="17" stroke="currentColor" stroke-width="2" fill="none">
+                            <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                            <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                            <line x1="12" y1="19" x2="12" y2="23"></line>
+                            <line x1="8" y1="23" x2="16" y2="23"></line>
+                        </svg>
+                    </button>
+                    <button type="submit" id="send-button" class="send-btn" title="Send message">
+                        <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none">
+                            <line x1="22" y1="2" x2="11" y2="13"></line>
+                            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                        </svg>
+                    </button>
+                </form>
+                <small class="disclaimer">OmniAssist can schedule meetings, manage tasks, and draft emails. Verify drafts before sending.</small>
+            </div>
+        </section>
+
+        <!-- VIEW 2: PLANNER & TASKS -->
+        <section id="view-tasks" class="view-panel" style="display: none;">
+            <div class="view-content-wrapper">
+                <div class="content-header">
+                    <div>
+                        <h2>Planner & Tasks</h2>
+                        <p>Track to-do items, organize daily agenda, and prioritize high-impact deliverables.</p>
+                    </div>
+                    <div class="btn-group">
+                        <button id="auto-block-tasks-btn" class="secondary-btn" title="Schedule focus time blocks for pending tasks on Google Calendar">Auto-Block Focus Time</button>
+                        <button id="add-task-modal-btn" class="primary-btn">+ Add Task</button>
+                    </div>
+                </div>
+
+                <!-- TASK FILTERS -->
+                <div class="filter-bar">
+                    <button class="filter-tab active" data-task-filter="ALL">All Tasks</button>
+                    <button class="filter-tab" data-task-filter="DAILY">Daily Planner (Today)</button>
+                    <button class="filter-tab" data-task-filter="TODO">Pending</button>
+                    <button class="filter-tab" data-task-filter="COMPLETED">Completed</button>
+                </div>
+
+                <!-- ADD TASK INLINE FORM -->
+                <div id="task-create-box" class="card form-card" style="display: none;">
+                    <h4>Create New Task</h4>
+                    <div class="form-row">
+                        <input type="text" id="task-title-input" class="text-input" placeholder="Task Title (e.g., Finalize presentation slides)">
+                        <select id="task-priority-input" class="select-input">
+                            <option value="MEDIUM">Medium Priority</option>
+                            <option value="LOW">Low Priority</option>
+                            <option value="HIGH">High Priority</option>
+                            <option value="URGENT">Urgent Priority</option>
+                        </select>
+                        <input type="datetime-local" id="task-due-input" class="text-input">
+                    </div>
+                    <div class="form-row">
+                        <input type="text" id="task-category-input" class="text-input" placeholder="Category (e.g. Work, Meeting, Review)">
+                        <input type="text" id="task-desc-input" class="text-input" placeholder="Optional notes or subtasks...">
+                        <button id="save-task-btn" class="primary-btn">Save Task</button>
+                        <button id="cancel-task-btn" class="secondary-btn">Cancel</button>
+                    </div>
+                </div>
+
+                <!-- TASK LIST -->
+                <div id="task-items-container" class="task-grid">
+                    <p class="loading-state">Loading tasks...</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW 3: CALENDAR & SCHEDULE -->
+        <section id="view-calendar" class="view-panel" style="display: none;">
+            <div class="view-content-wrapper">
+                <div class="content-header">
+                    <div>
+                        <h2>Calendar & Schedule</h2>
+                        <p>Google Calendar events, conflict detection, and open slot finder.</p>
+                    </div>
+                    <div class="btn-group">
+                        <button id="auto-block-cal-btn" class="primary-btn" title="Schedule focus time blocks for pending tasks on Google Calendar">Auto-Block Focus Time</button>
+                        <button id="refresh-calendar-btn" class="secondary-btn">Refresh Calendar</button>
+                    </div>
+                </div>
+
+                <div class="dashboard-two-col">
+                    <div class="col card">
+                        <h3>Upcoming Events</h3>
+                        <div id="calendar-events-container" class="event-list">
+                            <p class="loading-state">Loading calendar events...</p>
+                        </div>
+                    </div>
+
+                    <div class="col card">
+                        <h3>Smart Free Slot Finder</h3>
+                        <p class="sub-text">Find open meeting windows that avoid scheduling collisions.</p>
+                        <div class="form-row">
+                            <input type="date" id="slot-date-picker" class="text-input">
+                            <select id="slot-duration-select" class="select-input">
+                                <option value="30">30 minutes</option>
+                                <option value="45">45 minutes</option>
+                                <option value="60">60 minutes</option>
+                            </select>
+                            <button id="find-slots-btn" class="primary-btn">Find Slots</button>
+                        </div>
+                        <div id="free-slots-result" class="slots-container">
+                            <!-- Populated with free slots -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW 4: MAILBOX & TEMPLATES -->
+        <section id="view-inbox" class="view-panel" style="display: none;">
+            <div class="view-content-wrapper">
+                <div class="content-header">
+                    <div>
+                        <h2>Mailbox & Templates</h2>
+                        <p>Review Gmail inbox, sent history, and reusable email templates.</p>
+                    </div>
+                    <div class="btn-group">
+                        <button id="tab-inbox-btn" class="secondary-btn active">Inbox</button>
+                        <button id="tab-triage-btn" class="secondary-btn">AI Triage</button>
+                        <button id="tab-sent-btn" class="secondary-btn">Sent</button>
+                        <button id="tab-templates-btn" class="secondary-btn">Templates</button>
+                    </div>
+                </div>
+
+                <div id="inbox-messages-container" class="mail-list">
+                    <p class="loading-state">Loading inbox emails...</p>
+                </div>
+
+                <!-- AI INBOX TRIAGE CONTAINER -->
+                <div id="inbox-triage-container" class="triage-view" style="display: none;">
+                    <div class="triage-header">
+                        <div>
+                            <h3>Inbox Zero AI Triage</h3>
+                            <p class="sub-text">Action-oriented categorization with one-click smart replies.</p>
+                        </div>
+                        <button id="refresh-triage-btn" class="secondary-btn">Refresh Triage</button>
+                    </div>
+                    <div id="triage-cards-container" class="triage-grid">
+                        <p class="loading-state">Analyzing unread emails...</p>
+                    </div>
+                </div>
+
+                <div id="templates-container" class="template-grid" style="display: none;">
+                    <!-- Template cards -->
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW 5: KNOWLEDGE & NOTES -->
+        <section id="view-knowledge" class="view-panel" style="display: none;">
+            <div class="view-content-wrapper">
+                <div class="content-header">
+                    <div>
+                        <h2>Knowledge Base & Notes</h2>
+                        <p>Company notes, reference documents, and AI context.</p>
+                    </div>
+                    <div class="btn-group">
+                        <button id="create-note-toggle-btn" class="primary-btn">+ New Note</button>
+                        <button id="process-minutes-toggle-btn" class="secondary-btn">Process Meeting Notes</button>
+                        <label class="secondary-btn file-upload-label">
+                            Upload File <input type="file" id="file-upload-input" style="display: none;">
+                        </label>
+                    </div>
+                </div>
+
+                <!-- MEETING MINUTES PROCESSOR -->
+                <div id="meeting-minutes-box" class="card form-card" style="display: none;">
+                    <h4>AI Meeting Minutes to Tasks & Email</h4>
+                    <p class="sub-text">Paste transcript or notes. OmniAssist extracts decisions, creates tasks in your planner, and drafts follow-up emails.</p>
+                    <div class="form-row">
+                        <input type="text" id="meeting-title-input" class="text-input" placeholder="Meeting Title (e.g. Q4 Strategy Review)">
+                        <input type="text" id="meeting-attendees-input" class="text-input" placeholder="Attendees (comma-separated, e.g. Alice, Bob, carol@company.com)">
+                    </div>
+                    <textarea id="meeting-notes-input" class="text-input" rows="5" placeholder="Paste meeting minutes, raw notes, or transcript here..."></textarea>
+                    <div class="btn-row">
+                        <button id="process-minutes-btn" class="primary-btn">Extract Deliverables & Draft Email</button>
+                        <button id="cancel-minutes-btn" class="secondary-btn">Cancel</button>
+                    </div>
+                    <div id="minutes-result-box" style="margin-top: 12px; display: none;"></div>
+                </div>
+
+                <!-- SEARCH BAR -->
+                <div class="search-bar-row">
+                    <input type="text" id="knowledge-search-input" class="text-input search-box" placeholder="Search notes, documents, and meeting summaries...">
+                    <button id="knowledge-search-btn" class="secondary-btn">Search</button>
+                </div>
+
+                <!-- INLINE NOTE FORM -->
+                <div id="note-create-box" class="card form-card" style="display: none;">
+                    <h4>Save Note to Knowledge Base</h4>
+                    <input type="text" id="note-title-input" class="text-input" placeholder="Title (e.g. Architecture Decisions)">
+                    <textarea id="note-content-input" class="text-input" rows="4" placeholder="Content / markdown notes..."></textarea>
+                    <input type="text" id="note-tags-input" class="text-input" placeholder="Tags (comma separated, e.g. architecture, sprint-3)">
+                    <div class="btn-row">
+                        <button id="save-note-btn" class="primary-btn">Save Note</button>
+                        <button id="cancel-note-btn" class="secondary-btn">Cancel</button>
+                    </div>
+                </div>
+
+                <!-- DOCUMENT Q&A MODAL -->
+                <div id="doc-qa-modal" class="modal-overlay" style="display: none;">
+                    <div class="card modal-card">
+                        <div class="modal-header">
+                            <h3 id="doc-qa-title">Deep Document Q&A</h3>
+                            <button id="close-doc-qa-btn" class="icon-btn">
+                                <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none">
+                                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                                </svg>
+                            </button>
+                        </div>
+                        <p class="sub-text" id="doc-qa-subtitle">Ask questions grounded strictly in this document using AI RAG retrieval.</p>
+                        <div class="form-row">
+                            <input type="text" id="doc-qa-question-input" class="text-input" placeholder="Ask a question about this document...">
+                            <button id="doc-qa-submit-btn" class="primary-btn">Ask AI</button>
+                        </div>
+                        <div id="doc-qa-answer-container" class="qa-answer-box" style="display: none;">
+                            <div class="qa-answer-title">Answer:</div>
+                            <div id="doc-qa-answer-text"></div>
+                            <div class="qa-citations-title" style="margin-top: 10px; font-weight:600; font-size:12px;">Citations & Evidence:</div>
+                            <div id="doc-qa-citations-list"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- NOTES LIST -->
+                <div id="notes-grid-container" class="notes-grid">
+                    <p class="loading-state">Loading knowledge notes...</p>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+</div>
+
+<!-- SETTINGS MODAL (ACCESSED VIA TOP-RIGHT THREE-DOTS MENU) -->
+<div id="settings-modal" class="modal-overlay" style="display: none;">
+    <div class="card modal-card">
+        <div class="modal-header">
+            <h3>Settings & Personalization</h3>
+            <button id="close-settings-modal-btn" class="icon-btn">
+                <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+        </div>
+        <p class="sub-text">Customize user preferences, time zone, theme, and export backups.</p>
+
+        <div class="form-row" style="margin-top: 14px;">
+            <div class="form-group">
+                <label>Display Name</label>
+                <input type="text" id="settings-name" class="text-input">
+            </div>
+            <div class="form-group">
+                <label>Timezone</label>
+                <select id="settings-timezone" class="select-input">
+                    <option value="UTC">UTC</option>
+                    <option value="Asia/Kolkata">Asia/Kolkata (IST)</option>
+                    <option value="America/New_York">America/New_York (EST)</option>
+                    <option value="America/Los_Angeles">America/Los_Angeles (PST)</option>
+                    <option value="Europe/London">Europe/London (GMT)</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label>Work Start Hour (0-23)</label>
+                <input type="number" id="settings-start-hour" class="text-input" min="0" max="23" value="9">
+            </div>
+            <div class="form-group">
+                <label>Work End Hour (0-23)</label>
+                <input type="number" id="settings-end-hour" class="text-input" min="0" max="23" value="17">
+            </div>
+            <div class="form-group">
+                <label>Theme</label>
+                <select id="settings-theme" class="select-input">
+                    <option value="light">Light Theme</option>
+                    <option value="dark">Dark Theme</option>
+                </select>
+            </div>
+        </div>
+        <div class="btn-row" style="margin-top: 10px;">
+            <button id="save-settings-btn" class="primary-btn">Save Preferences</button>
+            <span id="settings-status" class="status-msg"></span>
         </div>
 
-    </main>
+        <div class="sidebar-divider" style="margin: 20px 0;"></div>
 
+        <h4>Data Portability & Backup</h4>
+        <p class="sub-text">Download all conversations, tasks, notes, and templates as portable JSON.</p>
+        <button id="export-data-btn" class="secondary-btn" style="margin-top: 8px;">Export Full Backup (JSON)</button>
+    </div>
 </div>
 
 <script src="/js/chat.js"></script>
